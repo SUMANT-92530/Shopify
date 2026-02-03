@@ -6,11 +6,10 @@ export const createProduct = async (req, res) => {
   try {
     const { title, description, price, stock, category } = req.body;
 
-    if (!title || !price || !stock) {
-      return res.status(400).json({ message: "Required fields missing" });
-    }
+    const seller = await SellerProfile.findOne({
+      userId: req.user.userId
+    });
 
-    const seller = await SellerProfile.findOne({ userId: req.user.userId });
     if (!seller) {
       return res.status(404).json({ message: "Seller profile not found" });
     }

@@ -4,12 +4,20 @@ import {
   getAllProducts
 } from "../controllers/productController.js";
 
+import { authMiddleware } from "../middlewares/authMiddleware.js";
+import { roleMiddleware } from "../middlewares/roleMiddleware.js";
+
 const router = express.Router();
 
-// Seller will use this (abhi open hai)
-router.post("/", createProduct);
+// 🔒 SELLER ONLY
+router.post(
+  "/",
+  authMiddleware,
+  roleMiddleware("seller"),
+  createProduct
+);
 
-// Customer + public
+//PUBLIC
 router.get("/", getAllProducts);
 
 export default router;
