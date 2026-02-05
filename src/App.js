@@ -2,15 +2,14 @@
 import { Routes, Route } from "react-router-dom";
 
 // Common layout
-import Navbar from "./component/navbar";
-import Login from "./component/login";
-import Signup from "./component/signup";
+import Navbar from "./component/common/navbar";
+
+// Auth
+import LoginForm from "./component/core/auth/LoginForm";
+import SignupForm from "./component/core/auth/SignupForm";
 
 // Pages
 import Home from "./pages/home";
-import Profile from "./pages/Customer/profile";
-
-// import Orders from "./pages/Orders";
 
 function App() {
   return (
@@ -20,11 +19,13 @@ function App() {
 
       {/* Page routing */}
       <Routes>
+
         <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
-        <Route path="/profile" element={<Profile />} />
-        {/* <Route path="/orders" element={<Orders />} /> */}
+        
+        <Route path="/login" element={<LoginForm />} />
+
+        <Route path="/signup" element={<SignupForm />} />
+
       </Routes>
     </>
   );

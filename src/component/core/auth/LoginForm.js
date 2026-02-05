@@ -1,27 +1,30 @@
-import { useContext, useState } from "react";
-import { AuthContext } from "../context/authContext";
+import {login} from "../../../services/operations/authAPI";
+import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
-function Login() {
-    const { login } = useContext(AuthContext);
+function LoginForm() {
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const [formData, setFormData] = useState({
+        email: "",
+        password: "",
+    })
+
+    const {email, password} = formData;
+
+    const handleChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value,
+        })
+    }
 
     const handleLogin = (e) => {
         e.preventDefault();
-
-        // mock user (replace with backend later)
-        const userData = {
-        name: "Sumant Kumar",
-        email: email,
-        role: "customer",
-        };
-
-        login(userData);     // save user in context + localStorage
-        navigate("/");       // go to home page
-    };
+        dispatch(login(formData, navigate));
+    }
 
     return (
         <div className="flex justify-center items-center min-h-[70vh]">
@@ -39,7 +42,8 @@ function Login() {
             placeholder="Enter your email"
             className="w-full mb-4 px-4 py-2 border rounded"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={handleChange}
+            name="email"
             required
             />
 
@@ -49,7 +53,8 @@ function Login() {
             placeholder="Enter your password"
             className="w-full mb-4 px-4 py-2 border rounded"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={handleChange}
+            name="password"
             required
             />
 
@@ -63,6 +68,7 @@ function Login() {
         </form>
         </div>
     );
+
 }
 
-export default Login;
+export default LoginForm;

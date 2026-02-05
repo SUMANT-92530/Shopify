@@ -1,19 +1,49 @@
+import {signup} from "../../../services/operations/authAPI";
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+// import { toast } from "react-toastify";
+import {ACCOUNT_TYPE} from "../../../utils/constants";
 
-function Signup() {
+function SignupForm() {
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
 
-  // form states
-    const [role, setRole] = useState("");
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    // customer or seller
+    const [accountType, setAccountType] = useState(ACCOUNT_TYPE.CUSTOMER);
+
+    const [formData, setFormData] = useState({
+        name: "",
+        email: "",
+        password: "",
+    })
+
+    const {name, email, password} = formData;
+
+    const handleChange = (e) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value,
+        })
+    }
 
     const handleSignup = (e) => {
         e.preventDefault();
+        
+        const signupData = {
+            ...formData,
+            accountType,
+    }
+        dispatch(signup(signupData, navigate));
 
-        console.log("Signup Data:", { role, name, email, password });
-        alert("Signup successful (frontend only)");
-    };
+        setFormData({
+            name: "",
+            email: "",
+            password: "",
+        })
+        setAccountType(ACCOUNT_TYPE.CUSTOMER);
+    }
+
 
     return (
         <div className="flex justify-center mt-12">
@@ -32,7 +62,7 @@ function Signup() {
                     type="radio"
                     name="role"
                     value="customer"
-                    onChange={(e) => setRole(e.target.value)}
+                    onChange={(e) => setAccountType(e.target.value)}
                     required
                 />
                 Customer
@@ -43,7 +73,7 @@ function Signup() {
                     type="radio"
                     name="role"
                     value="seller"
-                    onChange={(e) => setRole(e.target.value)}
+                    onChange={(e) => setAccountType(e.target.value)}
                 />
                 Seller
                 </label>
@@ -55,7 +85,8 @@ function Signup() {
             placeholder="Full Name"
             className="w-full mb-4 px-4 py-2 border rounded"
             value={name}
-            onChange={(e) => setName(e.target.value)}
+            onChange={handleChange}
+            name="name"
             required
             />
 
@@ -64,7 +95,8 @@ function Signup() {
             placeholder="Gmail"
             className="w-full mb-4 px-4 py-2 border rounded"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={handleChange}
+            name="email"
             required
             />
 
@@ -73,19 +105,21 @@ function Signup() {
             placeholder="Password"
             className="w-full mb-4 px-4 py-2 border rounded"
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={handleChange}
+            name="password"
             required
             />
 
             <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded"
+            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
             >
-            Sign Up
+            Create Account
             </button>
         </form>
         </div>
     );
+
 }
 
-export default Signup;
+export default SignupForm;

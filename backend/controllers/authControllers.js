@@ -6,12 +6,14 @@ import SellerProfile from "../models/seller/Profile.js";
 
 //Sign Up
 export const signUp = async (req, res) => {
-  try {
-    const { name, email, password, role, storeName } = req.body;
 
-    if (!name || !email || !password || !role) {
+  console.log("Received sign-up request with data: "); // Debug log
+  try {
+    const { name, email, password, accountType, storeName } = req.body;
+
+    if (!name || !email || !password || !accountType) {
       return res.status(400).json({
-        message: "Name, email, password and role are required"
+        message: "Name, email, password and accountType are required"
       });
     }
 
@@ -26,15 +28,15 @@ export const signUp = async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      role
+      accountType
     });
 
-    // Role based profile creation
-    if (role === "customer") {
+    // accountType based profile creation
+    if (accountType === "customer") {
       await CustomerProfile.create({ userId: user._id });
     }
 
-    if (role === "seller") {
+    if (accountType === "seller") {
       if (!storeName) {
         return res
           .status(400)
@@ -48,15 +50,16 @@ export const signUp = async (req, res) => {
     }
 
     const token = jwt.sign(
-      { userId: user._id, role: user.role },
+      { userId: user._id, accountType: user.accountType },
       process.env.JWT_SECRET,
       { expiresIn: "1d" }
     );
 
     res.status(201).json({
+      success: true,
       message: "User registered successfully",
       token,
-      role: user.role
+      accountType: user.accountType
     });
   } catch (error) {
     console.error(error);
@@ -86,15 +89,17 @@ export const login = async (req, res) => {
     }
 
     const token = jwt.sign(
-      { userId: user._id, role: user.role },
+      { userId: user._id, accountType: user.accountType },
       process.env.JWT_SECRET,
       { expiresIn: "1d" }
     );
 
     res.status(200).json({
+      success: true,
       message: "Login successful",
       token,
-      role: user.role
+      user: { id: user._id, name: user.name, email: user.email},
+      accountType: user.accountType
     });
   } catch (error) {
     console.error(error);
