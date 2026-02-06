@@ -1,7 +1,7 @@
 import Cart from "../models/customer/Cart.js";
 import CustomerProfile from "../models/customer/Profile.js";
 
-//ADD TO CART 
+//ADD TO CART
 export const addToCart = async (req, res) => {
   try {
     const { productId, quantity } = req.body;

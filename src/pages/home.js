@@ -48,51 +48,6 @@ function Home() {
             </div>
         </section>
 
-        {/* Footer */}
-        <footer className="bg-gray-900 text-gray-300 mt-16">
-            <div className="max-w-7xl mx-auto px-6 py-10 grid grid-cols-1 md:grid-cols-4 gap-8">
-
-            <div>
-                <h4 className="text-white text-xl font-bold mb-4">Shopify</h4>
-                <p className="text-sm">
-                Your one-stop destination for quality products and great deals.
-                </p>
-            </div>
-
-            <div>
-                <h5 className="text-white font-semibold mb-3">Quick Links</h5>
-                <ul className="space-y-2 text-sm">
-                <li>Home</li>
-                <li>Shop</li>
-                <li>Deals</li>
-                <li>Categories</li>
-                </ul>
-            </div>
-
-            <div>
-                <h5 className="text-white font-semibold mb-3">Support</h5>
-                <ul className="space-y-2 text-sm">
-                <li>Help Center</li>
-                <li>Returns</li>
-                <li>Shipping</li>
-                <li>Track Order</li>
-                </ul>
-            </div>
-
-            <div>
-                <h5 className="text-white font-semibold mb-3">Connect</h5>
-                <div className="flex gap-4 text-xl">
-                🌐 📘 📸 🐦
-                </div>
-            </div>
-
-            </div>
-
-            <div className="text-center border-t border-gray-700 py-4 text-sm">
-            © 2026 Shopify. All rights reserved.
-            </div>
-        </footer>
-
         </div>
     );
     }

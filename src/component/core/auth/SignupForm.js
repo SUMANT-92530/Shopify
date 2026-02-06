@@ -10,7 +10,7 @@ function SignupForm() {
     const dispatch = useDispatch();
 
     // customer or seller
-    const [accountType, setAccountType] = useState(ACCOUNT_TYPE.CUSTOMER);
+    const [role, setrole] = useState(ACCOUNT_TYPE.CUSTOMER);
 
     const [formData, setFormData] = useState({
         name: "",
@@ -32,7 +32,7 @@ function SignupForm() {
         
         const signupData = {
             ...formData,
-            accountType,
+            role,
     }
         dispatch(signup(signupData, navigate));
 
@@ -41,7 +41,7 @@ function SignupForm() {
             email: "",
             password: "",
         })
-        setAccountType(ACCOUNT_TYPE.CUSTOMER);
+        setrole(ACCOUNT_TYPE.CUSTOMER);
     }
 
 
@@ -62,7 +62,7 @@ function SignupForm() {
                     type="radio"
                     name="role"
                     value="customer"
-                    onChange={(e) => setAccountType(e.target.value)}
+                    onChange={(e) => setrole(e.target.value)}
                     required
                 />
                 Customer
@@ -73,7 +73,7 @@ function SignupForm() {
                     type="radio"
                     name="role"
                     value="seller"
-                    onChange={(e) => setAccountType(e.target.value)}
+                    onChange={(e) => setrole(e.target.value)}
                 />
                 Seller
                 </label>
