@@ -12,42 +12,30 @@ const Navbar = ({ products = [] }) => {
 
   const { isAuthenticated, user } = useSelector((state) => state.auth);
 
-  // Dropdown State
+  // ✅ Cart count from Redux
+  const cartCount = useSelector((state) => state.cart.items.length);
+
   const [dropdownOpen, setDropdownOpen] = useState(false);
-
-  // Search State
   const [searchTerm, setSearchTerm] = useState("");
-
-  // Dropdown Ref (Outside Click Close)
   const dropdownRef = useRef();
 
-  // ✅ Close dropdown when clicked outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target)
-      ) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
         setDropdownOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
-
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Logout Handler
   const handleLogout = () => {
     dispatch(logout());
     navigate("/login");
   };
 
-  // Search Handler
   const handleSearch = (e) => {
     setSearchTerm(e.target.value);
-
-    // Optional: navigate to search page
     navigate(`/search?query=${e.target.value}`);
   };
 
@@ -64,7 +52,6 @@ const Navbar = ({ products = [] }) => {
       {/* ✅ Search Bar */}
       <div className="w-[45%] relative hidden md:flex">
         <Search className="absolute left-3 top-2.5 text-gray-400" size={18} />
-
         <input
           type="text"
           placeholder="Search for products"
@@ -76,13 +63,17 @@ const Navbar = ({ products = [] }) => {
 
       {/* ✅ Right Side */}
       <div className="flex items-center gap-5">
-        {/* ✅ Cart Icon */}
-        <Link
-          to="/dashboard/my-cart"
-          className="relative hover:text-green-400"
-        >
-          <ShoppingCart size={26} />
-        </Link>
+        {/* ✅ Cart Icon (only if logged in) */}
+        {isAuthenticated && (
+          <Link to="/dashboard/my-cart" className="relative hover:text-green-400">
+            <ShoppingCart size={26} />
+            {cartCount > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white px-2 py-0.5 rounded-full text-xs">
+                {cartCount}
+              </span>
+            )}
+          </Link>
+        )}
 
         {/* ✅ If Not Logged In */}
         {!isAuthenticated ? (
@@ -92,7 +83,6 @@ const Navbar = ({ products = [] }) => {
                 Login
               </button>
             </Link>
-
             <Link to="/signup">
               <button className="px-4 py-2 rounded-lg bg-green-600 hover:bg-green-700 transition">
                 Sign Up
@@ -102,7 +92,6 @@ const Navbar = ({ products = [] }) => {
         ) : (
           /* ✅ User Dropdown */
           <div className="relative" ref={dropdownRef}>
-            {/* Username */}
             <button
               onClick={() => setDropdownOpen(!dropdownOpen)}
               className="px-4 py-2 rounded-lg bg-gray-800 hover:bg-gray-700 transition"
@@ -110,7 +99,6 @@ const Navbar = ({ products = [] }) => {
               {user?.name || "User"} ▼
             </button>
 
-            {/* Dropdown Menu */}
             {dropdownOpen && (
               <div className="absolute right-0 mt-2 w-48 bg-white text-black rounded-lg shadow-lg overflow-hidden z-50">
                 <Link
@@ -134,7 +122,12 @@ const Navbar = ({ products = [] }) => {
                   className="block px-4 py-2 hover:bg-gray-200"
                   onClick={() => setDropdownOpen(false)}
                 >
-                  My Cart
+                  My Cart 🛒
+                  {cartCount > 0 && (
+                    <span className="ml-2 bg-red-500 text-white px-2 py-0.5 rounded-full text-sm">
+                      {cartCount}
+                    </span>
+                  )}
                 </Link>
 
                 <button

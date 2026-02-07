@@ -21,6 +21,11 @@ import AccountSettings from "./pages/Customer/dashboard/AccountSetting";
 
 // Pages
 import Home from "./pages/home";
+import ProductDetails from "./Product/ProductDetails";
+import Cart from "./pages/Cart/Cart";
+import CategoryPage from "./pages/CategoryPage";
+
+
 
 function App() {
   return (
@@ -34,6 +39,11 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<LoginForm />} />
         <Route path="/signup" element={<SignupForm />} />
+        <Route path="/product/:id" element={<ProductDetails />} />
+        <Route path="/cart" element={<Cart />} />
+        <Route path="/category/:name" element={<CategoryPage />} />
+
+
 
         {/* <Route path="/dashboard/*" element={<Dashboard />} />
         <Route path="/dashboard/account-settings" element={<AccountSettings />} />
@@ -50,6 +60,7 @@ function App() {
         <Route path="my-profile" element={<MyProfile />} />
         <Route path="account-settings" element={<AccountSettings />} />
         <Route path="my-orders" element={<MyOrders />} />
+        
 
       </Route>
 
