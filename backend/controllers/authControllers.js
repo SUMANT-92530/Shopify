@@ -5,24 +5,42 @@ import CustomerProfile from "../models/customer/Profile.js";
 import SellerProfile from "../models/seller/Profile.js";
 import Otp from "../models/Otp.js";
 
-//Sign Up
+/* =========================
+   SIGN UP (Customer / Seller)
+   ========================= */
 export const signUp = async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, role, storeName } = req.body;
 
+    // 🔹 Basic validation
     if (!name || !email || !password || !role) {
       return res.status(400).json({
+        success: false,
         message: "Name, email, password and role are required"
       });
     }
 
-    const existingUser = await User.findOne({ email });
-    if (existingUser) {
-      return res.status(400).json({ message: "User already exists" });
+    // 🔹 Seller specific validation
+    if (role === "seller" && !storeName) {
+      return res.status(400).json({
+        success: false,
+        message: "Store name is required for seller"
+      });
     }
 
+    // 🔹 Check existing user
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res.status(400).json({
+        success: false,
+        message: "User already exists"
+      });
+    }
+
+    // 🔹 Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
+    // 🔹 Create base user
     const user = await User.create({
       name,
       email,
@@ -30,154 +48,112 @@ export const signUp = async (req, res) => {
       role
     });
 
-    // role based profile creation
+    // 🔹 Create role-based profile
     if (role === "customer") {
-      await CustomerProfile.create({ userId: user._id });
+      await CustomerProfile.create({
+        userId: user._id
+      });
     }
 
-    // if (role === "seller") {
-    //   // if (!storeName) {
-    //   //   return res
-    //   //     .status(400)
-    //   //     .json({ message: "Store name is required for seller" });
-    //   // }
+    if (role === "seller") {
+      await SellerProfile.create({
+        userId: user._id,
+        storeName
+      });
+    }
 
-    //   await SellerProfile.create({
-    //     userId: user._id,
-    //     storeName
-    //   });
-    // }
-
+    // 🔹 JWT Token
     const token = jwt.sign(
       { userId: user._id, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: "1d" }
     );
 
-    res.status(201).json({
+    return res.status(201).json({
       success: true,
       message: "User registered successfully",
       token,
       role: user.role
     });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error" });
+    console.error("Signup Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Server error"
+    });
   }
 };
 
-
-
-
+/* =========================
+   LOGIN WITH OTP
+   ========================= */
 export const login = async (req, res) => {
   try {
     const { email, otp } = req.body;
 
-    // ✅ Validation
+    // 🔹 Validation
     if (!email || !otp) {
       return res.status(400).json({
         success: false,
-        message: "Email and OTP are required",
+        message: "Email and OTP are required"
       });
     }
 
-    // ✅ Check User Exists
+    // 🔹 Check user
     const user = await User.findOne({ email });
-
     if (!user) {
       return res.status(400).json({
         success: false,
-        message: "User not registered",
+        message: "User not registered"
       });
     }
 
-    // ✅ Find Latest OTP from DB
+    // 🔹 Get latest OTP
     const recentOtp = await Otp.findOne({ email })
-      .sort({ createdAt: -1 })
-      .limit(1);
+      .sort({ createdAt: -1 });
 
     if (!recentOtp) {
       return res.status(400).json({
         success: false,
-        message: "OTP expired or not found",
+        message: "OTP expired or not found"
       });
     }
 
-    // ✅ OTP Match Check
+    // 🔹 Match OTP
     if (recentOtp.otp !== otp) {
       return res.status(400).json({
         success: false,
-        message: "Invalid OTP",
+        message: "Invalid OTP"
       });
     }
 
-    // ✅ Generate JWT Token
+    // 🔹 Generate JWT
     const token = jwt.sign(
       { userId: user._id, role: user.role },
       process.env.JWT_SECRET,
       { expiresIn: "1d" }
     );
 
-    // ✅ (Optional) Delete OTP After Successful Login
+    // 🔹 Delete OTPs after login
     await Otp.deleteMany({ email });
 
-    // ✅ Success Response
-    res.status(200).json({
+    return res.status(200).json({
       success: true,
-      message: "Login successful with OTP",
+      message: "Login successful",
       token,
-      user,
       role: user.role,
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role
+      }
     });
   } catch (error) {
-    console.error("OTP Login Error:", error);
-    res.status(500).json({
+    console.error("Login Error:", error);
+    return res.status(500).json({
       success: false,
-      message: "Server error",
+      message: "Server error"
     });
   }
 };
-
-
-
-
-
-//LOGIN
-// export const login = async (req, res) => {
-//   try {
-//     const { email, password } = req.body;
-
-//     if (!email || !password) {
-//       return res
-//         .status(400)
-//         .json({ message: "Email and password are required" });
-//     }
-
-//     const user = await User.findOne({ email });
-//     if (!user) {
-//       return res.status(400).json({ message: "Invalid credentials" });
-//     }
-
-//     const isMatch = await bcrypt.compare(password, user.password);
-//     if (!isMatch) {
-//       return res.status(400).json({ message: "Invalid credentials" });
-//     }
-
-//     const token = jwt.sign(
-//       { userId: user._id, role: user.role },
-//       process.env.JWT_SECRET,
-//       { expiresIn: "1d" }
-//     );
-
-//     res.status(200).json({
-//       success: true,
-//       message: "Login successful",
-//       token,
-//       user,
-//       role: user.role
-//     });
-//   } catch (error) {
-//     console.error(error);
-//     res.status(500).json({ message: "Server error" });
-//   }
-// };
