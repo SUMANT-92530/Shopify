@@ -44,7 +44,12 @@ export const signup = (signupData) => {
       if (!response.success) {
         throw new Error(response.message);
       }
-
+       dispatch(
+        loginSuccess({
+          user: response.user,
+          token: response.token,
+        })
+      );
       toast.success("Signup Successful");
       toast.dismiss(toastId);
 

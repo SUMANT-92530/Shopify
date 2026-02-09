@@ -29,6 +29,10 @@ const initialState = {
         state.user = action.payload.user;
         state.isAuthenticated = true;
 
+        console.log("Storing token and user in localStorage:",{
+            token: action.payload.token,
+            user: action.payload.user,
+        });
         localStorage.setItem("token", action.payload.token);
         localStorage.setItem("user", JSON.stringify(action.payload.user));
         },

@@ -13,7 +13,7 @@ import Dashboard from "./pages/Customer/Dashboard";
 import MyProfile from "./pages/Customer/dashboard/MyProfile";
 import MyOrders from "./pages/Customer/dashboard/MyOrders";
 import AccountSettings from "./pages/Customer/dashboard/AccountSetting";
-import Cart from "./pages/Cart/Cart"; // ✅ Cart import
+import Cart from "./pages/Cart/Cart"; // Cart import
 
 // Pages
 import Home from "./pages/home";
@@ -36,13 +36,13 @@ function App() {
         <Route path="/login" element={<LoginForm />} />
         <Route path="/signup" element={<SignupForm />} />
         <Route path="/product/:id" element={<ProductDetails />} />
-        <Route path="/cart" element={<Cart />} /> {/* ✅ Top-level cart */}
+        <Route path="/cart" element={<Cart />} /> {/* Top-level cart */}
         <Route path="/category/:name" element={<CategoryPage />} />
 
-        {/* ✅ Seller route fixed */}
+        {/* Seller route fixed */}
         <Route path="/seller/verification" element={<SellerVerification />} />
 
-        {/* ✅ Dashboard Parent Layout */}
+        {/* Dashboard Parent Layout */}
         <Route path="/dashboard" element={<Dashboard />}>
           {/* Default Route */}
           <Route index element={<Navigate to="my-profile" />} />
@@ -51,7 +51,7 @@ function App() {
           <Route path="my-profile" element={<MyProfile />} />
           <Route path="account-settings" element={<AccountSettings />} />
           <Route path="my-orders" element={<MyOrders />} />
-          <Route path="my-cart" element={<Cart />} /> {/* ✅ Added Cart inside dashboard */}
+          <Route path="my-cart" element={<Cart />} /> {/* Added Cart inside dashboard */}
         </Route>
       </Routes>
 
