@@ -41,9 +41,9 @@ export const signup = (signupData) => {
       const response = await apiConnector("POST", SIGNUP_API, signupData);
       console.log("Signup response: ", response);
 
-      if (!response.success) {
-        throw new Error(response.message);
-      }
+      // if (!response.success) {
+      //   throw new Error(response.message);
+      // }
        dispatch(
         loginSuccess({
           user: response.user,
