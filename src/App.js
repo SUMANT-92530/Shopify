@@ -25,8 +25,6 @@ import ProductDetails from "./Product/ProductDetails";
 import Cart from "./pages/Cart/Cart";
 import CategoryPage from "./pages/CategoryPage";
 
-<<<<<<< Updated upstream
-=======
 // Seller
 import SellerVerification from "./pages/Seller/SellerVerification";
 import NavbarSeller from "./component/common/navbarSeller";
@@ -36,7 +34,6 @@ import SellerDashboardLayout from "./pages/Seller/SellerDashboardLayout";
 import SellerProtectedRoute from "./routes/SellerProtectedRoute";
 
 
->>>>>>> Stashed changes
 
 
 function App() {
@@ -68,26 +65,13 @@ function App() {
 
 
 
-<<<<<<< Updated upstream
-        {/* <Route path="/dashboard/*" element={<Dashboard />} />
-        <Route path="/dashboard/account-settings" element={<AccountSettings />} />
-        <Route path="/dashboard/my-orders" element={<MyOrders />} />
-        <Route path="/dashboard/my-profile" element={<MyProfile />} /> */}
         
         {/* ✅ Dashboard Parent Layout */}
       <Route path="/dashboard" element={<Dashboard />}>
 
         {/* Default Route */}
         <Route index element={<Navigate to="my-profile" />} />
-
-        {/* Child Pages */}
-        <Route path="my-profile" element={<MyProfile />} />
-        <Route path="account-settings" element={<AccountSettings />} />
-        <Route path="my-orders" element={<MyOrders />} />
         
-
-      </Route>
-=======
           {/* Child Pages */}
           <Route path="my-profile" element={<MyProfile />} />
           <Route path="account-settings" element={<AccountSettings />} />
@@ -116,7 +100,6 @@ function App() {
           <Route path="partners" element={<h2>Partner Services Page</h2>} />
         </Route>
 
->>>>>>> Stashed changes
 
       </Routes>
 

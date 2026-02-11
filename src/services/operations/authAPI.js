@@ -2,12 +2,14 @@ import { toast } from "react-toastify";
 import { apiConnector } from "../apiConnector";
 import { loginSuccess } from "../../slices/authSlice";
 // import rootReducer from "../../reducer";
-
 import { endpoints } from "../apis";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
 const { LOGIN_API, SIGNUP_API } = endpoints;
 
 export const login = (formData, navigate) => {
+
     return async(dispatch) => {
         try {
             console.log("Attempting to log in with data: ", formData);
@@ -15,9 +17,9 @@ export const login = (formData, navigate) => {
                 formData
                 )
             console.log("Login response: ", response);
-            if(!response.success) {
-                throw new Error(response.data.message);
-            }
+            // if(!response.success) {
+            //     throw new Error(response.data.message);
+            // }
 
             console.log("Login successful, dispatching to store...");
             console.log("User data: ", response.user);
@@ -41,20 +43,17 @@ export const login = (formData, navigate) => {
     }
 
 
-<<<<<<< Updated upstream
-=======
       // if (!response.success) {
       //   throw new Error(response.message);
       // }
-      dispatch(
-        loginSuccess({
-          user: response.user,
-          token: response.token,
-        })
-      );
-      toast.success("Signup Successful");
-      toast.dismiss(toastId);
->>>>>>> Stashed changes
+    //   dispatch(
+    //     loginSuccess({
+    //       user: response.user,
+    //       token: response.token,
+    //     })
+    //   );
+    //   toast.success("Signup Successful");
+    //   toast.dismiss(toastId);
 
 // export function loginWithOtp(data, navigate) {
 //     return async (dispatch) => {
