@@ -29,6 +29,12 @@ const Navbar = ({ products = [] }) => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  useEffect(() => {
+  // Whenever auth state changes, force dropdown closed
+    setDropdownOpen(false);
+    },  [isAuthenticated]);
+
+
   const handleLogout = () => {
     dispatch(logout());
     navigate("/login");

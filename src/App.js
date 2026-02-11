@@ -25,13 +25,36 @@ import ProductDetails from "./Product/ProductDetails";
 import Cart from "./pages/Cart/Cart";
 import CategoryPage from "./pages/CategoryPage";
 
+<<<<<<< Updated upstream
+=======
+// Seller
+import SellerVerification from "./pages/Seller/SellerVerification";
+import NavbarSeller from "./component/common/navbarSeller";
+import { useSelector } from "react-redux";
+
+import SellerDashboardLayout from "./pages/Seller/SellerDashboardLayout";
+import SellerProtectedRoute from "./routes/SellerProtectedRoute";
+
+
+>>>>>>> Stashed changes
 
 
 function App() {
+
+  const { isAuthenticated, user } = useSelector((state) => state.auth);
+
+
   return (
     <>
       {/* Navbar stays visible on all pages */}
-      <Navbar />
+
+      {
+        isAuthenticated && user.role === "seller" ? (
+          <NavbarSeller />
+        ) : (
+          <Navbar />
+        )
+      }
 
       {/* Page routing */}
       <Routes>
@@ -45,6 +68,7 @@ function App() {
 
 
 
+<<<<<<< Updated upstream
         {/* <Route path="/dashboard/*" element={<Dashboard />} />
         <Route path="/dashboard/account-settings" element={<AccountSettings />} />
         <Route path="/dashboard/my-orders" element={<MyOrders />} />
@@ -63,6 +87,36 @@ function App() {
         
 
       </Route>
+=======
+          {/* Child Pages */}
+          <Route path="my-profile" element={<MyProfile />} />
+          <Route path="account-settings" element={<AccountSettings />} />
+          <Route path="my-orders" element={<MyOrders />} />
+          <Route path="my-cart" element={<Cart />} /> {/* Added Cart inside dashboard */}
+        </Route>
+
+
+        {/* Seller Dashboard Routes */}
+        <Route
+          path="/seller"
+          element={
+            <SellerProtectedRoute>
+              <SellerDashboardLayout />
+            </SellerProtectedRoute>
+          }
+        >
+          <Route index element={<h2>Welcome Seller</h2>} />
+          <Route path="dashboard" element={<h2>Seller Dashboard</h2>} />
+          <Route path="listings" element={<h2>Listings Page</h2>} />
+          <Route path="orders" element={<h2>Orders Page</h2>} />
+          <Route path="payments" element={<h2>Payments Page</h2>} />
+          <Route path="growth" element={<h2>Growth Page</h2>} />
+          <Route path="ads" element={<h2>Advertising Page</h2>} />
+          <Route path="reports" element={<h2>Reports Page</h2>} />
+          <Route path="partners" element={<h2>Partner Services Page</h2>} />
+        </Route>
+
+>>>>>>> Stashed changes
 
       </Routes>
 

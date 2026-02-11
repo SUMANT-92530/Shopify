@@ -41,6 +41,20 @@ export const login = (formData, navigate) => {
     }
 
 
+<<<<<<< Updated upstream
+=======
+      // if (!response.success) {
+      //   throw new Error(response.message);
+      // }
+      dispatch(
+        loginSuccess({
+          user: response.user,
+          token: response.token,
+        })
+      );
+      toast.success("Signup Successful");
+      toast.dismiss(toastId);
+>>>>>>> Stashed changes
 
 // export function loginWithOtp(data, navigate) {
 //     return async (dispatch) => {

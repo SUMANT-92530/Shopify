@@ -58,7 +58,13 @@ export const signUp = async (req, res) => {
       success: true,
       message: "User registered successfully",
       token,
-      role: user.role
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role
+      },
+      role
     });
   } catch (error) {
     console.error(error);
@@ -66,9 +72,15 @@ export const signUp = async (req, res) => {
   }
 };
 
+<<<<<<< Updated upstream
 
 
 
+=======
+/* =========================
+  LOGIN WITH OTP
+   ========================= */
+>>>>>>> Stashed changes
 export const login = async (req, res) => {
   try {
     const { email, otp } = req.body;
