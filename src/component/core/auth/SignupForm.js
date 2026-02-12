@@ -19,35 +19,34 @@ function SignupForm() {
   const { name, email, password, storeName } = formData;
 
   const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
+    const { name, value } = e.target;
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
   };
 
   const handleSignup = async (e) => {
     e.preventDefault();
 
     const signupData = { ...formData, role };
-    if (role === ACCOUNT_TYPE.CUSTOMER) {
-      delete signupData.storeName;
-    }
 
     try {
       const response = await dispatch(signup(signupData));
 
-      // ✅ Navigation handled here in component
-      if (response.role === "seller") {
-        navigate("/seller/verification");
+      // ✅ Navigation handled here
+      if (response.user.role === "seller") {
+        navigate("/seller-verification");
       } else {
         navigate("/");
       }
+
+      // Reset form only after success
+      setFormData({ name: "", email: "", password: "", storeName: "" });
+      setRole(ACCOUNT_TYPE.CUSTOMER);
     } catch (error) {
       console.error("Signup failed:", error);
     }
-
-    setFormData({ name: "", email: "", password: "", storeName: "" });
-    setRole(ACCOUNT_TYPE.CUSTOMER);
   };
 
   return (

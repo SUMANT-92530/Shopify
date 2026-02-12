@@ -1,22 +1,58 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { sellerVerified } from "../../slices/authSlice"; // <-- create this action in your slice
+import { setUser } from "../../slices/authSlice"; // <-- create this action in your slice
+import { useSelector } from "react-redux";
+
 
 const SellerVerification = () => {
   const [verified, setVerified] = useState({
-    mobile: false,
-    email: false,
-    gstin: false,
-    signature: false,
-    store: false,
-    listing: false,
-  });
+  mobile: false,
+  email: false,
+  gstin: false,
+  signature: false,
+
+  store: {
+    completed: false,
+    storeName: "",
+  },
+
+  listing: false,
+});
+
+
+  const { user } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   // Calculate progress dynamically
   const totalSteps = 6;
   const completedSteps = Object.values(verified).filter(Boolean).length;
   const progressPercent = Math.round((completedSteps / totalSteps) * 100);
 
+  // ✅ Handle final verification + navigation
+      const handleGoToDashboard = () => {
+        dispatch(
+          setUser({
+            ...user,
+            storeName: verified.store.storeName,
+          })
+        );
+
+        dispatch(
+          sellerVerified({
+            verified: true,
+            steps: verified,
+          })
+        );
+
+        navigate("/seller/dashboard");
+      };
+
+
   return (
-    <div className="flex max-w-6xl mx-auto min-h-screen mt-10 gap-8">
+    <div className="flex pt-16 max-w-6xl mx-auto min-h-screen mt-10 gap-8">
       {/* Left Panel */}
       <div className="w-1/3 border rounded-lg p-6 shadow h-fit">
         <h3 className="text-lg font-bold mb-4">Your verification progress</h3>
@@ -73,16 +109,8 @@ const SellerVerification = () => {
       <div className="w-2/3 border rounded-lg p-6 shadow">
         {/* Example: Mobile & Email Verification */}
         <h3 className="text-xl font-bold mb-4">Mobile & Email Verification</h3>
-        <input
-          type="text"
-          placeholder="Mobile Number"
-          className="w-full mb-3 p-2 border rounded"
-        />
-        <input
-          type="email"
-          placeholder="Email Address"
-          className="w-full mb-3 p-2 border rounded"
-        />
+        <input type="text" placeholder="Mobile Number" className="w-full mb-3 p-2 border rounded" />
+        <input type="email" placeholder="Email Address" className="w-full mb-3 p-2 border rounded" />
         <button
           onClick={() => setVerified({ ...verified, mobile: true, email: true })}
           className="bg-green-600 text-white px-4 py-2 rounded"
@@ -92,11 +120,7 @@ const SellerVerification = () => {
 
         {/* Example: GSTIN & Signature */}
         <h3 className="text-xl font-bold mt-8 mb-4">ID & Signature Verification</h3>
-        <input
-          type="text"
-          placeholder="Enter GSTIN"
-          className="w-full mb-3 p-2 border rounded"
-        />
+        <input type="text" placeholder="Enter GSTIN" className="w-full mb-3 p-2 border rounded" />
         <button
           onClick={() => setVerified({ ...verified, gstin: true })}
           className="bg-green-600 text-white px-4 py-2 rounded mb-3"
@@ -121,21 +145,37 @@ const SellerVerification = () => {
         {/* Example: Store & Pickup */}
         <h3 className="text-xl font-bold mt-8 mb-4">Store & Pickup Details</h3>
         <input
-          type="text"
-          placeholder="Store Name"
-          className="w-full mb-3 p-2 border rounded"
+            type="text"
+            placeholder="Store Name"
+            value={verified.store.storeName}
+            onChange={(e) =>
+              setVerified({
+                ...verified,
+                store: {
+                  ...verified.store,
+                  storeName: e.target.value,
+                },
+              })
+            }
+            className="w-full mb-3 p-2 border rounded"
         />
-        <input
-          type="text"
-          placeholder="Pickup Address"
-          className="w-full mb-3 p-2 border rounded"
-        />
+
+        <input type="text" placeholder="Pickup Address" className="w-full mb-3 p-2 border rounded" />
         <button
-          onClick={() => setVerified({ ...verified, store: true })}
+          onClick={() =>
+            setVerified({
+              ...verified,
+              store: {
+                ...verified.store,
+                completed: true,
+              },
+            })
+          }
           className="bg-green-600 text-white px-4 py-2 rounded"
         >
-          Save
+          Save Store Details
         </button>
+
 
         {/* Example: Listing */}
         <h3 className="text-xl font-bold mt-8 mb-4">Listing & Stock Availability</h3>
@@ -144,6 +184,13 @@ const SellerVerification = () => {
           className="bg-green-600 text-white px-4 py-2 rounded"
         >
           Add Products
+        </button>
+        <br />
+        <button
+          onClick={handleGoToDashboard}
+          className="bg-blue-600 text-white px-4 py-2 rounded mt-4"
+        >
+          Go to Dashboard
         </button>
       </div>
     </div>
