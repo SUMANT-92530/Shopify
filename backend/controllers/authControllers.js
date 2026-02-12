@@ -72,15 +72,9 @@ export const signUp = async (req, res) => {
   }
 };
 
-<<<<<<< Updated upstream
-
-
-
-=======
 /* =========================
   LOGIN WITH OTP
    ========================= */
->>>>>>> Stashed changes
 export const login = async (req, res) => {
   try {
     const { email, otp } = req.body;

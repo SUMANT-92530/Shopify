@@ -79,6 +79,7 @@ function App() {
           <Route path="my-cart" element={<Cart />} /> {/* Added Cart inside dashboard */}
         </Route>
 
+        <Route path="/seller-verification" element={<SellerVerification />} />
 
         {/* Seller Dashboard Routes */}
         <Route
