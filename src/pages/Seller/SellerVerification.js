@@ -1,14 +1,30 @@
-import { useState, useRef } from "react";
-import SignatureCanvas from "react-signature-canvas";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { sellerVerified } from "../../slices/authSlice"; // <-- create this action in your slice
+import { setUser } from "../../slices/authSlice"; // <-- create this action in your slice
+import { useSelector } from "react-redux";
+
 
 const SellerVerification = () => {
   const [verified, setVerified] = useState({
-    mobile: false,
-    email: false,
-    signature: false,
-    store: false,
-    listing: false,
-  });
+  mobile: false,
+  email: false,
+  gstin: false,
+  signature: false,
+
+  store: {
+    completed: false,
+    storeName: "",
+  },
+
+  listing: false,
+});
+
+
+  const { user } = useSelector((state) => state.auth);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({
     mobile: "",
@@ -24,10 +40,28 @@ const SellerVerification = () => {
   const completedSteps = Object.values(verified).filter(Boolean).length;
   const progressPercent = Math.round((completedSteps / totalSteps) * 100);
 
-  const isEmpty = (value) => !value || value.trim() === "";
+  // ✅ Handle final verification + navigation
+      const handleGoToDashboard = () => {
+        dispatch(
+          setUser({
+            ...user,
+            storeName: verified.store.storeName,
+          })
+        );
+
+        dispatch(
+          sellerVerified({
+            verified: true,
+            steps: verified,
+          })
+        );
+
+        navigate("/seller/dashboard");
+      };
+
 
   return (
-    <div className="flex max-w-6xl mx-auto min-h-screen mt-10 gap-8">
+    <div className="flex pt-16 max-w-6xl mx-auto min-h-screen mt-10 gap-8">
       {/* Left Panel */}
       <div className="w-1/3 border rounded-lg p-6 shadow h-fit">
         <h3 className="text-lg font-bold mb-4">Your verification progress</h3>
@@ -81,20 +115,8 @@ const SellerVerification = () => {
       <div className="w-2/3 border rounded-lg p-6 shadow">
         {/* Mobile & Email Verification */}
         <h3 className="text-xl font-bold mb-4">Mobile & Email Verification</h3>
-        <input
-          type="text"
-          placeholder="Mobile Number"
-          value={formData.mobile}
-          onChange={(e) => setFormData({ ...formData, mobile: e.target.value })}
-          className="w-full mb-3 p-2 border rounded"
-        />
-        <input
-          type="email"
-          placeholder="Email Address"
-          value={formData.email}
-          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-          className="w-full mb-3 p-2 border rounded"
-        />
+        <input type="text" placeholder="Mobile Number" className="w-full mb-3 p-2 border rounded" />
+        <input type="email" placeholder="Email Address" className="w-full mb-3 p-2 border rounded" />
         <button
           onClick={() => {
             if (!isEmpty(formData.mobile) && !isEmpty(formData.email)) {
@@ -108,15 +130,9 @@ const SellerVerification = () => {
           Verify
         </button>
 
-        {/* Signature Verification */}
-        <h3 className="text-xl font-bold mt-8 mb-4">Signature Verification</h3>
-
-        {/* Draw Signature */}
-        <SignatureCanvas
-          ref={sigCanvas}
-          penColor="black"
-          canvasProps={{ width: 500, height: 200, className: "border mb-3" }}
-        />
+        {/* Example: GSTIN & Signature */}
+        <h3 className="text-xl font-bold mt-8 mb-4">ID & Signature Verification</h3>
+        <input type="text" placeholder="Enter GSTIN" className="w-full mb-3 p-2 border rounded" />
         <button
           onClick={() => {
             if (sigCanvas.current && !sigCanvas.current.isEmpty()) {
@@ -148,39 +164,52 @@ const SellerVerification = () => {
         {/* Store & Pickup */}
         <h3 className="text-xl font-bold mt-8 mb-4">Store & Pickup Details</h3>
         <input
-          type="text"
-          placeholder="Store Name"
-          value={formData.storeName}
-          onChange={(e) => setFormData({ ...formData, storeName: e.target.value })}
-          className="w-full mb-3 p-2 border rounded"
-        />
-        <input
-          type="text"
-          placeholder="Pickup Address"
-          value={formData.pickupAddress}
-          onChange={(e) => setFormData({ ...formData, pickupAddress: e.target.value })}
-          className="w-full mb-3 p-2 border rounded"
-        />
-        <button
-          onClick={() => {
-            if (!isEmpty(formData.storeName) && !isEmpty(formData.pickupAddress)) {
-              setVerified({ ...verified, store: true });
-            } else {
-              alert("Please enter Store Name and Pickup Address before saving!");
+            type="text"
+            placeholder="Store Name"
+            value={verified.store.storeName}
+            onChange={(e) =>
+              setVerified({
+                ...verified,
+                store: {
+                  ...verified.store,
+                  storeName: e.target.value,
+                },
+              })
             }
-          }}
+            className="w-full mb-3 p-2 border rounded"
+        />
+
+        <input type="text" placeholder="Pickup Address" className="w-full mb-3 p-2 border rounded" />
+        <button
+          onClick={() =>
+            setVerified({
+              ...verified,
+              store: {
+                ...verified.store,
+                completed: true,
+              },
+            })
+          }
           className="bg-green-600 text-white px-4 py-2 rounded"
         >
-          Save
+          Save Store Details
         </button>
 
-        {/* Listing */}
+
+        {/* Example: Listing */}
         <h3 className="text-xl font-bold mt-8 mb-4">Listing & Stock Availability</h3>
         <button
           onClick={() => setVerified({ ...verified, listing: true })}
           className="bg-green-600 text-white px-4 py-2 rounded"
         >
           Add Products
+        </button>
+        <br />
+        <button
+          onClick={handleGoToDashboard}
+          className="bg-blue-600 text-white px-4 py-2 rounded mt-4"
+        >
+          Go to Dashboard
         </button>
       </div>
     </div>

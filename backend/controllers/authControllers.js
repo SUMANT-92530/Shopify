@@ -73,7 +73,13 @@ export const signUp = async (req, res) => {
       success: true,
       message: "User registered successfully",
       token,
-      role: user.role
+      user: {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role
+      },
+      role
     });
   } catch (error) {
     console.error("Signup Error:", error);
@@ -85,7 +91,7 @@ export const signUp = async (req, res) => {
 };
 
 /* =========================
-   LOGIN WITH OTP
+  LOGIN WITH OTP
    ========================= */
 export const login = async (req, res) => {
   try {
