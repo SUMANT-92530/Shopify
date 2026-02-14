@@ -1,50 +1,47 @@
 import Product from "../models/Product.js";
-import SellerProfile from "../models/seller/Profile.js";
 
-//CREATE PRODUCT (SELLER ONLY)
+/* ================================
+   ✅ SELLER: Create Product
+================================ */
 export const createProduct = async (req, res) => {
   try {
-    const { title, description, price, stock, category } = req.body;
-
-    const seller = await SellerProfile.findOne({
-      userId: req.user.userId
-    });
-
-    if (!seller) {
-      return res.status(404).json({ message: "Seller profile not found" });
-    }
+    const sellerId = req.user.id; // from authMiddleware
 
     const product = await Product.create({
-      sellerId: seller._id,
-      title,
-      description,
-      price,
-      stock,
-      category
+      ...req.body,
+      sellerId,
     });
 
     res.status(201).json({
       success: true,
-      product
+      message: "Product Added Successfully ✅",
+      product,
     });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({
+      success: false,
+      message: "Error creating product",
+      error: error.message,
+    });
   }
 };
 
-// GET ALL PRODUCTS (PUBLIC)
+/* ================================
+   ✅ CUSTOMER: Get All Products
+================================ */
 export const getAllProducts = async (req, res) => {
   try {
-    const products = await Product.find().populate(
-      "sellerId",
-      "storeName"
-    );
+    const products = await Product.find().sort({ createdAt: -1 });
 
     res.status(200).json({
       success: true,
-      products
+      products,
     });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({
+      success: false,
+      message: "Error fetching products",
+      error: error.message,
+    });
   }
 };

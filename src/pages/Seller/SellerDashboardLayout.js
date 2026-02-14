@@ -1,6 +1,7 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
 import SellerSidebar from "../../component/core/sellerSideBar";
+import SellerListingPage from "./dashboardPages/listings";
 
 const SellerDashboardLayout = () => {
     return (

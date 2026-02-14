@@ -1,9 +1,12 @@
-import { useState } from "react";
-import { products } from "../Product/products";
+import { useEffect, useState } from "react";
 import ProductCard from "../component/ProductCard";
+import { fetchAllProducts } from "../services/operations/productAPI";
 
 function Home() {
   const [selectedCategory, setSelectedCategory] = useState(null);
+
+  // Backend Products State
+  const [products, setProducts] = useState([]);
 
   // Category images
   const categoryImages = {
@@ -13,7 +16,24 @@ function Home() {
     Grocery: "/images/Category/groceries.jpeg",
   };
 
-  // Filter products based on selected category
+  /* ================================
+    ✅ Fetch Products from Backend
+  ================================ */
+  useEffect(() => {
+    const loadProducts = async () => {
+      const data = await fetchAllProducts();
+
+      if (data) {
+        setProducts(data);
+      }
+    };
+
+    loadProducts();
+  }, []);
+
+  /* ================================
+    ✅ Filter Products by Category
+  ================================ */
   const filteredProducts = selectedCategory
     ? products.filter((item) => item.category === selectedCategory)
     : products;
@@ -41,7 +61,7 @@ function Home() {
             }`}
             onClick={() => setSelectedCategory(cat)}
           >
-            {/* Bigger Image with hover effect */}
+            {/* Category Image */}
             <img
               src={img}
               alt={cat}
@@ -64,17 +84,24 @@ function Home() {
         </div>
       )}
 
-      {/* Best Deals */}
+      {/* Products Section */}
       <section className="max-w-7xl mx-auto px-6 mt-14">
         <h3 className="text-xl font-bold border-b-2 border-blue-600 inline-block mb-6">
           Best deal for you
         </h3>
 
-        <div className="flex gap-4 overflow-x-auto pb-4">
-          {filteredProducts.map((item) => (
-            <ProductCard key={item.id} product={item} />
-          ))}
-        </div>
+        {/* Loading Case */}
+        {products.length === 0 ? (
+          <p className="text-gray-500 mt-6">
+            No products available yet...
+          </p>
+        ) : (
+          <div className="flex gap-4 overflow-x-auto pb-4">
+            {filteredProducts.map((item) => (
+              <ProductCard key={item._id} product={item} />
+            ))}
+          </div>
+        )}
       </section>
     </div>
   );

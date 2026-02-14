@@ -27,6 +27,9 @@ import { useSelector } from "react-redux";
 
 import SellerDashboardLayout from "./pages/Seller/SellerDashboardLayout";
 import SellerProtectedRoute from "./routes/SellerProtectedRoute";
+import AddListing from "./pages/Seller/listing/AddListing";
+import SellerListingPage from "./pages/Seller/dashboardPages/listings";
+import ProductList from "./pages/Customer/ProductList";
 
 
 
@@ -52,6 +55,7 @@ function App() {
       <Routes>
         {/* Public routes */}
         <Route path="/" element={<Home />} />
+        <Route path="/products" element={<ProductList />} />
         <Route path="/login" element={<LoginForm />} />
         <Route path="/signup" element={<SignupForm />} />
         <Route path="/product/:id" element={<ProductDetails />} />
@@ -86,7 +90,8 @@ function App() {
         >
           <Route index element={<h2>Welcome Seller</h2>} />
           <Route path="dashboard" element={<h2>Seller Dashboard</h2>} />
-          <Route path="listings" element={<h2>Listings Page</h2>} />
+          <Route path="listings" element={<SellerListingPage />} />
+          <Route path="add-listing" element={<AddListing />} />
           <Route path="orders" element={<h2>Orders Page</h2>} />
           <Route path="payments" element={<h2>Payments Page</h2>} />
           <Route path="growth" element={<h2>Growth Page</h2>} />
