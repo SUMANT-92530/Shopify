@@ -4,6 +4,8 @@ import { useDispatch } from "react-redux";
 import { sellerVerified } from "../../slices/authSlice"; // <-- create this action in your slice
 import { setUser } from "../../slices/authSlice"; // <-- create this action in your slice
 import { useSelector } from "react-redux";
+import { isEmpty } from "lodash";
+import { useRef } from "react";
 
 
 const SellerVerification = () => {
