@@ -5,41 +5,16 @@ const ProductCard = ({ product }) => {
 
   return (
     <div
-      className="min-w-[200px] border rounded-xl p-4 bg-white hover:shadow-lg cursor-pointer transition"
-      onClick={() => navigate(`/product/${product._id}`)}
+      className="min-w-[180px] border rounded-lg p-4 hover:shadow cursor-pointer"
+      onClick={() => navigate(`/product/${product.id}`)}
     >
-      {/* Product Image (Fallback) */}
       <img
-        src={
-          product.image
-            ? product.image
-            : "https://via.placeholder.com/200x150?text=No+Image"
-        }
-        alt={product.productName}
-        className="h-28 w-full object-cover rounded-md mb-3"
+        src={product.image}
+        alt={product.name}
+        className="h-24 w-full object-cover mb-2"
       />
-
-      {/* Product Name */}
-      <p className="font-semibold text-gray-800 truncate">
-        {product.productName}
-      </p>
-
-      {/* Brand */}
-      <p className="text-sm text-gray-500">{product.brand}</p>
-
-      {/* Price */}
-      <p className="text-green-600 font-bold mt-2">
-        ₹{product.price}
-      </p>
-
-      {/* Stock */}
-      {product.stock > 0 ? (
-        <p className="text-xs text-gray-400 mt-1">
-          Stock: {product.stock}
-        </p>
-      ) : (
-        <p className="text-xs text-red-500 mt-1">Out of Stock</p>
-      )}
+      <p className="font-medium">{product.name}</p>
+      <p className="text-green-600 font-semibold">₹{product.price}</p>
     </div>
   );
 };
